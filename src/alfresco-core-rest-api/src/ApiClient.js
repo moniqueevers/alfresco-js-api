@@ -289,13 +289,8 @@
           }
           break;
         case 'oauth2':
-          if (window.localStorage.getItem('ticket-ECM')) {
-            request.set({'Authorization': 'BASIC ' + window.localStorage.getItem('ticket-ECM')});
-          }
-          else {
-            if (auth.accessToken) {
+          if (auth.accessToken) {
               request.set({'Authorization': 'Bearer ' + auth.accessToken});
-            }
           }
           break;
         default:
