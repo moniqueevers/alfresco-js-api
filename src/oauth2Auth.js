@@ -62,11 +62,12 @@ class Oauth2Auth extends AlfrescoApiClient {
             .then(() => {
                 return this.discoveryUrls();
             })
-            .then(() => {
-                if (this.config.oauth2.implicitFlow) {
-                    return this.loadJwks();
-                }
-            })
+            // UPDATE S3 jwks check uit
+            // .then(() => {
+            //     if (this.config.oauth2.implicitFlow) {
+            //         return this.loadJwks();
+            //     }
+            // })
             .then(() => {
                 if (this.config.oauth2.implicitFlow) {
                     return this.checkFragment();
@@ -167,7 +168,8 @@ class Oauth2Auth extends AlfrescoApiClient {
             if (this.hashFragmentParams) {
                 let accessToken = this.hashFragmentParams.access_token;
                 let idToken = this.hashFragmentParams.id_token;
-                let sessionState = this.hashFragmentParams.session_state;
+                // UPDATE S3 nonce added
+                let sessionState = this.hashFragmentParams.session_state || _this5.storage.getItem('nonce');
                 let expiresIn = this.hashFragmentParams.expires_in;
 
                 window.location.hash = '';
@@ -179,8 +181,9 @@ class Oauth2Auth extends AlfrescoApiClient {
                     if (jwt) {
                         this.storeIdToken(idToken, jwt.payload.exp);
                         this.storeAccessToken(accessToken, expiresIn);
-                        this.authentications.basicAuth.username = jwt.payload.preferred_username;
-                        this.saveUsername(jwt.payload.preferred_username);
+                        // UPDATE S3 payload.sub added
+                        this.authentications.basicAuth.username = jwt.payload.preferred_username || jwt.payload.sub;
+                        this.saveUsername(jwt.payload.preferred_username || jwt.payload.sub);
                         this.silentRefresh();
                         resolve(accessToken);
                     }
@@ -373,6 +376,10 @@ class Oauth2Auth extends AlfrescoApiClient {
 
             if (!externalHash) {
                 hash = decodeURIComponent(window.location.hash);
+                // UPDATE S3 add # if not in responese url
+                if (!hash) {
+                  hash = '#'+window.location.search;
+                }
             } else {
                 hash = decodeURIComponent(externalHash);
             }

@@ -83,7 +83,10 @@
     if (!path.match(/^\//)) {
       path = '/' + path;
     }
-    var url = this.basePath + path;
+    /** UPDATE S3 remove last slash from path*/
+    if (basePath.includes('jwks.json')) {var url = basePath;} else {
+      var url = basePath + path;
+    }
     var _this = this;
     url = url.replace(/\{([\w-]+)\}/g, function(fullMatch, key) {
       var value;
@@ -286,8 +289,13 @@
           }
           break;
         case 'oauth2':
-          if (auth.accessToken) {
-            request.set({'Authorization': 'Bearer ' + auth.accessToken});
+          if (window.localStorage.getItem('ticket-ECM')) {
+            request.set({'Authorization': 'BASIC ' + window.localStorage.getItem('ticket-ECM')});
+          }
+          else {
+            if (auth.accessToken) {
+              request.set({'Authorization': 'Bearer ' + auth.accessToken});
+            }
           }
           break;
         default:

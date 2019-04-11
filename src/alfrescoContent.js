@@ -25,7 +25,7 @@ class AlfrescoContent {
         return this.ecmClient.basePath + '/nodes/' + nodeId +
             '/renditions/doclib/content' +
             '?attachment=' + (attachment ? 'true' : 'false') +
-            '&alf_ticket=' + (ticket || this.ecmAuth.getTicket());
+            '&alf_ticket=' + (ticket || window.localStorage.getItem('ticket') || this.ecmAuth.getTicket());
     }
 
     /**
@@ -40,7 +40,7 @@ class AlfrescoContent {
         return this.ecmClient.basePath + '/nodes/' + nodeId +
             '/renditions/imgpreview/content' +
             '?attachment=' + (attachment ? 'true' : 'false') +
-            '&alf_ticket=' + (ticket || this.ecmAuth.getTicket());
+            '&alf_ticket=' + (ticket || window.localStorage.getItem('ticket')  || this.ecmAuth.getTicket());
     }
 
     /**
@@ -55,7 +55,7 @@ class AlfrescoContent {
         return this.ecmClient.basePath + '/nodes/' + nodeId +
             '/content' +
             '?attachment=' + (attachment ? 'true' : 'false') +
-            '&alf_ticket=' + (ticket || this.ecmAuth.getTicket());
+            '&alf_ticket=' + (ticket || window.localStorage.getItem('ticket')  || this.ecmAuth.getTicket());
     }
 
     /**
@@ -71,7 +71,7 @@ class AlfrescoContent {
         return this.ecmClient.basePath + '/nodes/' + nodeId +
             '/renditions/' + encoding + '/content' +
             '?attachment=' + (attachment ? 'true' : 'false') +
-            '&alf_ticket=' + (ticket || this.ecmAuth.getTicket());
+            '&alf_ticket=' + (ticket || window.localStorage.getItem('ticket')  || this.ecmAuth.getTicket());
     }
 
     /**
