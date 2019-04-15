@@ -62,12 +62,11 @@ class Oauth2Auth extends AlfrescoApiClient {
             .then(() => {
                 return this.discoveryUrls();
             })
-            // UPDATE S3 jwks check uit
-            // .then(() => {
-            //     if (this.config.oauth2.implicitFlow) {
-            //         return this.loadJwks();
-            //     }
-            // })
+            .then(() => {
+                if (this.config.oauth2.implicitFlow) {
+                    return this.loadJwks();
+                }
+            })
             .then(() => {
                 if (this.config.oauth2.implicitFlow) {
                     return this.checkFragment();
@@ -235,13 +234,14 @@ class Oauth2Auth extends AlfrescoApiClient {
                 aud: [this.config.oauth2.clientId]
             });
 
-        if (isValid) {
+        // UPDATE S3 Always valid
+        // if (isValid) {
             return {
                 idToken: jwt,
                 payload: payload,
                 header: header
             };
-        }
+        // }
     }
 
     storeIdToken(idToken, exp) {
@@ -490,7 +490,7 @@ class Oauth2Auth extends AlfrescoApiClient {
 
     granPasswordLogin(username, password, resolve, reject) {
         var postBody = {}, pathParams = {}, queryParams = {}, formParams = {};
-
+        console.log("S3 INFO config", this.config.oauth2);
         var auth = 'Basic ' + new Buffer(this.config.oauth2.clientId + ':' + this.config.oauth2.secret).toString('base64');
 
         var headerParams = {

@@ -289,7 +289,12 @@
           }
           break;
         case 'oauth2':
-          if (auth.accessToken) {
+          // UPDATE S3 check if Ticket is available and switch to Basic
+          if (_this.storage.getItem('ticket-ECM')) {
+            var ticketinfo = 'Basic ' + new Buffer('ROLE_TICKET' + ':' + _this.storage.getItem('ticket-ECM')).toString('base64');
+            request.set({'Authorization': ticketinfo});
+          }
+          if (auth.accessToken && !_this.storage.getItem('ticket-ECM')) {
               request.set({'Authorization': 'Bearer ' + auth.accessToken});
           }
           break;
